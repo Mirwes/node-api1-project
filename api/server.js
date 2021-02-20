@@ -21,7 +21,21 @@ server.get('/api/users', (req, res) => {
            errorMessage: "The users info couln't be retrieved."})
     });
 });
-
+//get user object by id
+server.get('/api/users/:id', (req, res) => {
+    database.findById(req.params.id).then(user => {
+        if (!user) {
+            res.status(404).json({ message: "The user with the specified ID doesn't exist."});    
+        } else {
+            res.status(200).json(user);
+        }
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            errormessage: "The user info could not be retrieved."
+   });
+  });
+});
 
 
 
