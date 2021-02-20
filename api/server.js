@@ -79,7 +79,33 @@ server.post("/api/users", (req, res) => {
         });
     }
 });
+//Removes the user with the spicified id and returns the deleted user.
 
+server.delete('/api/user/:id', (req, res) => {
+    let deletedUser = {};
+    database.findById(req.params.id)
+    .then(user => {
+        if (!user) {
+            res.status(404).json({
+                message: "The user with the spicified ID does not exist." })
+
+        } else {
+            deletedUser = user;
+
+            database.remove(req.params.id)
+            .then(numDeleted => {
+                res.status(200).json(deletedUser);
+            }).catch(err => {
+                console.log(err);
+                res.status(500).json({errorMessage: "The user could not be removed" });
+            });
+        }
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            errorMessage: "The user info could not be retrieved." })
+    });
+});
 
 
 
