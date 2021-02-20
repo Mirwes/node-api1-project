@@ -62,6 +62,23 @@ server.put('/api/users/:id', (req, res) => {
         res.status(500).json({ errorMessage: "The user info could not be modified."})
     });
 });
+//creates a user using the info sent inside the request boy.
+server.post("/api/users", (req, res) => {
+    if (!req.body.name || !req.body.bio) {
+        res.status(400).json({
+            errorMessage: "Please provide name and bio for the user." })
+    } else {
+        database.insert(req.body)
+        .then(userIDObj => {
+            //returns an object containing the id of the user just created.
+            res.status(201).json(userIDObj);
+        }).catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                errorMessage: "oops"});
+        });
+    }
+});
 
 
 
